@@ -1,7 +1,11 @@
 version: '3'
 services:
   web:
-    build: ../
+    image: ywateba/wordpress
+    container_name: wordpress_web
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
     restart: always
     ports:
       - "8000:80"
@@ -17,6 +21,7 @@ services:
       - wordpress:/var/www/html:rw
   db:
     image: mysql:5.7
+    container_name: wordpress_db
     restart: always
     logging:
       driver: none
