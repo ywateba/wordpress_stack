@@ -21,12 +21,18 @@ resource "aws_key_pair" "my_key_pair" {
 }
 
 
-resource "null_resource" "run_local_script" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
+resource "local_file" "private_key" {
+  content         = tls_private_key.ssh.private_key_pem
+  filename        = "linode.pem"
+  file_permission = "0600"
+}
 
-  provisioner "local-exec" {
-    command = "ssh-keygen -t rsa -b 2048 -f wordpress-keypair "
-  }
+output "private_key" {
+  value = tls_private_key.ssh_key.private_key_pem
+  sensitive=true
+}
+
+output "public_key" {
+  value = tls_private_key.ssh_key.public_key_openssh
+  sensitive=true
 }
