@@ -62,26 +62,10 @@ resource "aws_security_group" "wordpress_security_group" {
 }
 
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["*linux*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
 # Launch a scalable EC2 instance
 resource "aws_launch_configuration" "wordpress_launch_config" {
   name_prefix          = "wordpress-ec2-launch-"
-  image_id             =  data.aws_ami.ubuntu.id # Replace with your desired Amazon Linux AMI
+  image_id             =  "ami-0261755bbcb8c4a84" # Replace with your desired Amazon Linux AMI
   instance_type        = "t2.micro"     # Change to your desired instance type
   security_groups      = [aws_security_group.wordpress_security_group.name]
   key_name             = "wordpress-keypair"   # Replace with your SSH key pair
@@ -136,7 +120,7 @@ resource "aws_lb_listener" "wordpress_listener" {
     fixed_response {
       content_type = "text/plain"
       status_code  = "200"
-     
+
     }
   }
 }
